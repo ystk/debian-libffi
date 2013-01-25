@@ -1,3 +1,9 @@
+libffi (3.0.9-3skerlet1) unstable; urgency=low
+
+  * Adaptation for Skerlet
+
+ -- Skerlet Project Team <skerlet@swc.toshiba.co.jp>  Fri, 25 Jan 2013 14:15:59 +0900
+
 libffi (3.0.9-3) unstable; urgency=low
 
   * Fix PR target/44452, taken from the GCC 4.5 branch.

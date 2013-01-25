@@ -41,7 +41,7 @@ ifneq (,$(filter $(DEB_HOST_ARCH), mips mipsel))
   abi64 = -gnuabi64
 endif
 
-ifeq (,$(filter $(distrelease),lenny etch squeeze sid dapper hardy jaunty karmic lucid))
+ifeq (,$(filter $(distrelease),lenny etch squeeze sid dapper hardy jaunty karmic lucid ashitaka))
   biarch_map := i686=x86_64 powerpc=powerpc64 sparc=sparc64 s390=s390x \
                 x86_64=i686 powerpc64=powerpc mips=mips64 mipsel=mips64el
 else
