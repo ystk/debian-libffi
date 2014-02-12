@@ -2,13 +2,15 @@ Source: libffi
 Priority: optional
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
 Uploaders: Matthias Klose <doko@debian.org>
-Build-Depends: debhelper (>= 5), g++-multilib [amd64 i386 mips mipsel powerpc ppc64 s390 sparc kfreebsd-amd64], dejagnu, lsb-release, texinfo
-Standards-Version: 3.8.4
+Build-Depends: debhelper (>= 5), g++-multilib [amd64 i386 mips mipsel powerpc ppc64 s390 sparc kfreebsd-amd64], dejagnu, lsb-release, texinfo,
+  dpkg-dev (>= 1.16.0~ubuntu4)
+Standards-Version: 3.9.2
 Section: libs
 
 Package: libffi-dev
 Section: libdevel
 Architecture: any
+Multi-Arch: same
 Depends: libffi5 (= ${binary:Version}), dpkg (>= 1.15.4) | install-info, ${misc:Depends}
 Conflicts: libffi4-dev
 Description: Foreign Function Interface library (development files)
@@ -62,6 +64,8 @@ Description: Foreign Function Interface library (development files, n32)
 Package: libffi5
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: multiarch-support
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Foreign Function Interface library runtime
  A foreign function interface is the popular name for the interface that
@@ -102,8 +106,19 @@ Package: libffi5-dbg
 Priority: extra
 Section: debug
 Architecture: any
+Multi-Arch: same
 Depends: libffi5 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Foreign Function Interface library runtime (debug symbols)
+ A foreign function interface is the popular name for the interface that
+ allows code written in one language to call code written in another
+ language.
+
+Package: libffi5-udeb
+Section: debian-installer
+XC-Package-Type: udeb
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Foreign Function Interface library runtime
  A foreign function interface is the popular name for the interface that
  allows code written in one language to call code written in another
  language.

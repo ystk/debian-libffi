@@ -1,8 +1,72 @@
-libffi (3.0.9-3skerlet1) unstable; urgency=low
+libffi (3.0.10-3) unstable; urgency=low
 
-  * Adaptation for Skerlet
+  * Fix powerpc and ppc64 builds (Kyle Moffett).
 
- -- Skerlet Project Team <skerlet@swc.toshiba.co.jp>  Fri, 25 Jan 2013 14:15:59 +0900
+ -- Matthias Klose <doko@debian.org>  Wed, 12 Oct 2011 21:14:27 +0200
+
+libffi (3.0.10-2) unstable; urgency=low
+
+  * Fix PowerPC soft-floating-point support (Kyle Moffett).
+    Closes: #644338.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 08 Oct 2011 14:18:42 +0200
+
+libffi (3.0.10-1) unstable; urgency=low
+
+  * Final 3.0.10 release.
+  * Explicitly use the host compiler.
+  * Define FFI_MMAP_EXEC_WRIT on kfreebsd-* (Petr Salinger). Closes: #642928.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 27 Sep 2011 17:01:15 +0200
+
+libffi (3.0.10~rc10-3) unstable; urgency=low
+
+  * Install the test logs with different names depending on the architecture.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 01 Sep 2011 21:36:44 +0200
+
+libffi (3.0.10~rc10-2) unstable; urgency=low
+
+  * Update symbols files.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 23 Aug 2011 12:39:50 +0200
+
+libffi (3.0.10~rc10-1) unstable; urgency=low
+
+  * New upstream release candidate (still using the same soname).
+    - Adds VFP hard-float calling convention support. Closes: #597920.
+  * Add variadic support for armhf (David Gilbert). LP: #739305.
+  * Update debian/copyright file.
+  * Add symbols files for armel and armhf.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 22 Aug 2011 21:21:46 +0200
+
+libffi (3.0.9-7) unstable; urgency=low
+
+  * libffi5-udeb: Fix dependency information (Colin Watson). Closes: #630006.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 11 Jun 2011 21:20:40 +0200
+
+libffi (3.0.9-6) unstable; urgency=low
+
+  * Don't make libffi5-udeb multiarch.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 10 Jun 2011 16:05:50 +0200
+
+libffi (3.0.9-5) unstable; urgency=low
+
+  * Add libffi5-udeb, since libgobject-2.0 requires libffi5 as of GLib
+    2.29.4 (Colin Watson). Closes: #630006.
+  * Build for multiarch.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 10 Jun 2011 12:50:32 +0200
+
+libffi (3.0.9-4) unstable; urgency=low
+
+  * Install to the multiarch triplet directories, not the gnu triplet
+    directories (Steve Langasek). Closes: #622976.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 18 Apr 2011 21:50:12 +0200
 
 libffi (3.0.9-3) unstable; urgency=low
 

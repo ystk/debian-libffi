@@ -10,6 +10,10 @@ DEB_HOST_ARCH		?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH)
 DEB_HOST_GNU_CPU	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_CPU)
 DEB_HOST_GNU_TYPE	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE	?= $(call vafilt,$(DPKG_VARS),DEB_BUILD_GNU_TYPE)
+DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
+
+CC  = $(DEB_HOST_GNU_TYPE)-gcc
+CXX = $(DEB_HOST_GNU_TYPE)-g++
 
 distribution := $(shell lsb_release -is)
 distrelease  := $(shell lsb_release -cs)
@@ -41,7 +45,7 @@ ifneq (,$(filter $(DEB_HOST_ARCH), mips mipsel))
   abi64 = -gnuabi64
 endif
 
-ifeq (,$(filter $(distrelease),lenny etch squeeze sid dapper hardy jaunty karmic lucid ashitaka))
+ifeq (,$(filter $(distrelease),lenny etch squeeze sid dapper hardy jaunty karmic lucid))
   biarch_map := i686=x86_64 powerpc=powerpc64 sparc=sparc64 s390=s390x \
                 x86_64=i686 powerpc64=powerpc mips=mips64 mipsel=mips64el
 else
@@ -66,7 +70,8 @@ stamp-configure:
 		--prefix=/usr \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
-		CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
+		--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+		CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
 	touch $@
 
 stamp-configure-biarch32:
@@ -81,7 +86,7 @@ stamp-configure-biarch32:
 		--infodir=\$${prefix}/share/info \
 		--includedir=\$${prefix}/include/$(biarch_gnu_type) \
 		--libdir=\$${prefix}/lib32 \
-		CC="gcc $(m32)" CXX="g++ $(m32)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
+		CC="$(CC) $(m32)" CXX="$(CXX) $(m32)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
 	touch $@
 
 stamp-configure-biarch64:
@@ -96,7 +101,7 @@ stamp-configure-biarch64:
 		--infodir=\$${prefix}/share/info \
 		--includedir=\$${prefix}/include/$(biarch_gnu_type)$(abi64) \
 		--libdir=\$${prefix}/lib64 \
-		CC="gcc $(m64)" CXX="g++ $(m64)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
+		CC="$(CC) $(m64)" CXX="$(CXX) $(m64)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
 	touch $@
 
 stamp-configure-biarchn32:
@@ -111,7 +116,7 @@ stamp-configure-biarchn32:
 		--infodir=\$${prefix}/share/info \
 		--includedir=\$${prefix}/include/$(biarch_gnu_type)$(abin32) \
 		--libdir=\$${prefix}/lib32 \
-		CC="gcc $(mn32)" CXX="g++ $(mn32)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
+		CC="$(CC) $(mn32)" CXX="$(CXX) $(mn32)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
 	touch $@
 
 build: stamp-build \
@@ -188,7 +193,7 @@ install: build
 	dh_installdirs -s
 	$(MAKE) -C build DESTDIR=$(CURDIR)/debian/tmp install
 	cp -p build/.libs/libffi_convenience.a \
-		debian/tmp/usr/lib/libffi_pic.a
+		debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libffi_pic.a
 	mkdir -p debian/libffi-dev/usr/share/doc/$(p)
 	cp -a build/doc/libffi.html debian/libffi-dev/usr/share/doc/$(p)/html
 ifneq (,$(filter biarch32, $(multiarch)))
@@ -208,9 +213,9 @@ ifneq (,$(filter biarchn32, $(multiarch)))
 endif
 	dh_install -s --sourcedir=debian/tmp
 
-	mkdir -p debian/libffi-dev/usr/include/$(DEB_HOST_GNU_TYPE)
+	mkdir -p debian/libffi-dev/usr/include/$(DEB_HOST_MULTIARCH)
 	mv debian/libffi-dev/usr/include/*.h \
-		debian/libffi-dev/usr/include/$(DEB_HOST_GNU_TYPE)/
+		debian/libffi-dev/usr/include/$(DEB_HOST_MULTIARCH)/
 
 ifneq (,$(filter biarch32, $(multiarch)))
 	mkdir -p debian/lib32ffi-dev/usr/include/$(biarch_gnu_type)
@@ -243,7 +248,7 @@ binary-arch: build install
 	cp -p ChangeLog debian/libffi-dev/usr/share/doc/libffi$(major)/changelog
 	cp -p ChangeLog.* debian/libffi-dev/usr/share/doc/libffi$(major)/
 ifeq ($(with_check),yes)
-	cp -p build/check.log debian/libffi-dev/usr/share/doc/libffi$(major)/test_results.txt
+	cp -p build/check.log debian/libffi-dev/usr/share/doc/libffi$(major)/test_results_$(DEB_HOST_MULTIARCH).txt
 endif
 	rm -rf debian/libffi-dev/usr/share/doc/libffi-dev
 	ln -s libffi$(major) debian/libffi-dev/usr/share/doc/libffi-dev
@@ -253,27 +258,28 @@ ifneq (,$(filter biarch32, $(multiarch)))
 	rm -rf debian/lib32ffi-dev/usr/share/doc/lib32ffi-dev
 	ln -s libffi-dev debian/lib32ffi-dev/usr/share/doc/lib32ffi-dev
   ifeq ($(with_check),yes)
-	cat build32/check.log >> debian/libffi-dev/usr/share/doc/libffi$(major)/test_results.txt
+	cat build32/check.log >> debian/libffi-dev/usr/share/doc/libffi$(major)/test_results_bi32_$(DEB_HOST_MULTIARCH).txt
   endif
 endif
 ifneq (,$(filter biarch64, $(multiarch)))
 	rm -rf debian/lib64ffi-dev/usr/share/doc/lib64ffi-dev
 	ln -s libffi-dev debian/lib64ffi-dev/usr/share/doc/lib64ffi-dev
   ifeq ($(with_check),yes)
-	cat build64/check.log >> debian/libffi-dev/usr/share/doc/libffi$(major)/test_results.txt
+	cat build64/check.log >> debian/libffi-dev/usr/share/doc/libffi$(major)/test_results_bi64_$(DEB_HOST_MULTIARCH).txt
   endif
 endif
 ifneq (,$(filter biarchn32, $(multiarch)))
 	rm -rf debian/libn32ffi-dev/usr/share/doc/libn32ffi-dev
 	ln -s libffi-dev debian/libn32ffi-dev/usr/share/doc/libn32ffi-dev
   ifeq ($(with_check),yes)
-	cat buildn32/check.log >> debian/libffi-dev/usr/share/doc/libffi$(major)/test_results.txt
+	cat buildn32/check.log >> debian/libffi-dev/usr/share/doc/libffi$(major)/test_results_bi32n_$(DEB_HOST_MULTIARCH).txt
   endif
 endif
 	dh_strip -s --dbg-package=libffi$(major)-dbg
 	dh_compress -s
 	dh_fixperms -s
-	dh_makeshlibs -s
+	dh_makeshlibs -plibffi$(major) --add-udeb=libffi$(major)-udeb
+	dh_makeshlibs -s -Nlibffi$(major)
 	dh_installdeb -s
 	dh_shlibdeps -s
 	dh_gencontrol -s

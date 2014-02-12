@@ -1,6 +1,4 @@
 libffi.so.5 lib64ffi5 #MINVER#
- NUM_FPR_ARG_REGISTERS@Base 3.0.4
- NUM_GPR_ARG_REGISTERS@Base 3.0.4
  ffi_assert@Base 3.0.4
  ffi_call@Base 3.0.4
  ffi_closure_alloc@Base 3.0.4
@@ -13,6 +11,7 @@ libffi.so.5 lib64ffi5 #MINVER#
  ffi_prep_args_SYSV@Base 3.0.4
  ffi_prep_cif@Base 3.0.4
  ffi_prep_cif_machdep@Base 3.0.4
+ ffi_prep_cif_var@Base 3.0.10~rc10
  ffi_prep_closure@Base 3.0.4
  ffi_prep_closure_loc@Base 3.0.4
  ffi_prep_java_raw_closure@Base 3.0.4
