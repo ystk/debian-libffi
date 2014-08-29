@@ -14,5 +14,5 @@ Abstract: The libffi library provides a portable, high level programming
 Section: Programming
 
 Format: HTML
-Index: /usr/share/doc/libffi5/html/index.html
-Files: /usr/share/doc/libffi5/html/*.html
+Index: /usr/share/doc/libffi6/html/index.html
+Files: /usr/share/doc/libffi6/html/*.html
