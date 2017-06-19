@@ -45,6 +45,7 @@ stamp-configure:
 		--prefix=/usr \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
+		--enable-pax_emutramp \
 		CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CCASFLAGS="$(CFLAGS) -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs $(LDFLAGS)"
 	touch $@
 #		--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
